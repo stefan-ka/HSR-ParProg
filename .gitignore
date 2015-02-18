@@ -1,0 +1,12 @@
+*.class
+/target
+*/.settings
+.classpath
+.project
+/Servers
+/.metadata
+
+# Package Files #
+*.jar
+*.war
+*.ear
