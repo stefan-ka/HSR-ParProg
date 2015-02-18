@@ -1,0 +1,6 @@
+a) siehe Klasse ch/hsr/skapferer/parprog/uebung1/aufgabe1/threadsubclass/ConsoleTicker.java
+   --> Beobachtung: Threads werden nach Beendigung des Main-Threads beendet
+   
+b) siehe ch/hsr/skapferer/parprog/uebung1/aufgabe1/threadsubclass/ConsoleTicker.java
+
+c) nur mit shutdown hook möglich, siehe ch/hsr/skapferer/parprog/uebung1/aufgabe1/threadsubclass/ConsoleTicker.java
