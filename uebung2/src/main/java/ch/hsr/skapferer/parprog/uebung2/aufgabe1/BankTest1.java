@@ -1,5 +1,8 @@
 package ch.hsr.skapferer.parprog.uebung2.aufgabe1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class BankAccount {
 	private int balance = 0;
 
@@ -35,7 +38,6 @@ class BankCustomer extends Thread {
 			account.deposit(100);
 			account.withdraw(100);
 		}
-		assert account.getBalance() == 0;
 	}
 }
 
@@ -44,8 +46,23 @@ public class BankTest1 {
 
 	public static void main(String[] args) {
 		BankAccount account = new BankAccount();
+		List<BankCustomer> customers = new ArrayList<>();
 		for (int i = 0; i < NOF_CUSTOMERS; i++) {
-			new BankCustomer(account).start();
+			BankCustomer customer = new BankCustomer(account);
+			customers.add(customer);
+			customer.start();
+		}
+		joinCustomers(customers);
+		assert account.getBalance() == 0;
+	}
+
+	private static void joinCustomers(List<BankCustomer> customers) {
+		for (BankCustomer customer : customers) {
+			try {
+				customer.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
