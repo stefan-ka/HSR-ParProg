@@ -1,0 +1,1 @@
+b) Methoden synchronized machen... --> Ja, es ist ein Geschwindigkeitsunterschied spürbar. (dauert etwas länger)
