@@ -1,4 +1,4 @@
-package ch.hsr.skapferer.parprog.uebung2.aufgabe1;
+package ch.hsr.skapferer.parprog.uebung2.aufgabe1.a;
 
 import java.util.ArrayList;
 import java.util.List;
