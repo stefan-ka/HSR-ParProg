@@ -35,8 +35,9 @@ class BoundedBuffer<T> {
 				e.printStackTrace();
 			}
 		}
+		T obj = queue.remove();
 		notifyAll();
-		return queue.remove();
+		return obj;
 	}
 }
 
