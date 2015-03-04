@@ -30,7 +30,7 @@ public class WarehouseWithLockCondition implements Warehouse {
 				nonFull.await();
 			}
 			currentAmount = currentAmount + amount;
-			nonEmpty.signal();
+			nonEmpty.signalAll();
 		} finally {
 			monitor.unlock();
 		}
@@ -44,7 +44,7 @@ public class WarehouseWithLockCondition implements Warehouse {
 				nonEmpty.await();
 			}
 			currentAmount = currentAmount - amount;
-			nonFull.signal();
+			nonFull.signalAll();
 		} finally {
 			monitor.unlock();
 		}
