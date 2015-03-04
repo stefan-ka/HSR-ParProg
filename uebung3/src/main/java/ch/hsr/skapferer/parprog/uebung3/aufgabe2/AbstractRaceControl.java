@@ -1,4 +1,4 @@
-package aufgabe2;
+package ch.hsr.skapferer.parprog.uebung3.aufgabe2;
 
 public abstract class AbstractRaceControl {
 	public final int NOF_RACE_CARS = 10;

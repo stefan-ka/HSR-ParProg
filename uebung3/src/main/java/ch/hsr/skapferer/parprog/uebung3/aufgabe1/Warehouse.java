@@ -1,4 +1,4 @@
-package aufgabe1;
+package ch.hsr.skapferer.parprog.uebung3.aufgabe1;
 
 public interface Warehouse {
 	// Wait until the amount can be added without exceeding the capacity.

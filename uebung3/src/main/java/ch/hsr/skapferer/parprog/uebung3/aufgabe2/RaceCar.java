@@ -1,4 +1,4 @@
-package aufgabe2;
+package ch.hsr.skapferer.parprog.uebung3.aufgabe2;
 
 public class RaceCar extends Thread {
 	private AbstractRaceControl theRace;

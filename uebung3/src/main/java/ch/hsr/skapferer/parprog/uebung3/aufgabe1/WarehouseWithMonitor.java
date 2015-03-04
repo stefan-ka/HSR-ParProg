@@ -1,4 +1,4 @@
-package aufgabe1;
+package ch.hsr.skapferer.parprog.uebung3.aufgabe1;
 
 public class WarehouseWithMonitor implements Warehouse {
 	// TODO
