@@ -1,19 +1,29 @@
 package ch.hsr.skapferer.parprog.uebung3.aufgabe1;
 
 public class WarehouseWithMonitor implements Warehouse {
-	// TODO
+
+	private int capacity;
+	private int currentAmount = 0;
 
 	public WarehouseWithMonitor(int capacity) {
-		// TODO
+		this.capacity = capacity;
 	}
 
 	@Override
-	public void put(int amount) throws InterruptedException {
-		// TODO
+	public synchronized void put(int amount) throws InterruptedException {
+		while ((currentAmount + amount) > capacity)
+			wait();
+
+		currentAmount = currentAmount + amount;
+		notifyAll();
 	}
 
 	@Override
-	public void get(int amount) throws InterruptedException {
-		// TODO
+	public synchronized void get(int amount) throws InterruptedException {
+		while (currentAmount < amount)
+			wait();
+
+		currentAmount = currentAmount - amount;
+		notifyAll();
 	}
 }
