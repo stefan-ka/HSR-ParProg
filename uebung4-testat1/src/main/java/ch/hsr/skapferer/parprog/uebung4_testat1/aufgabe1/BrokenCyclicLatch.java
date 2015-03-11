@@ -12,6 +12,18 @@ public class BrokenCyclicLatch {
 		for (int round = 0; round < NOF_ROUNDS; round++) {
 			latch.countDown();
 			latch.await();
+
+			/**
+			 * Problematik: Sobald eine Runde beendet ist (CountDownLatch steht
+			 * auf 0) muesste eine neue CountDownLatch erzeugt werden. Dies wird
+			 * hier zwar vom Thread mit der ID 0 gemacht, aber man kann nicht
+			 * sicher sein dass dieser der "erste" Thread ist welcher aus dem
+			 * await() kommt und wieder loslaeuft. Wenn ein anderer Thread
+			 * zuerst startet, geht dieser in die naechste Runde obwohl die
+			 * Latch noch gar nicht neu erzeugt wurde.
+			 * 
+			 */
+
 			if (threadId == 0) {
 				latch = new CountDownLatch(NOF_THREADS); // new latch for new
 															// round
