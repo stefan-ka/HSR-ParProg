@@ -46,12 +46,15 @@ class Philosopher extends Thread {
 		int leftForkNo = table.leftForkNumber(id);
 		int rightForkNo = table.rightForkNumber(id);
 
-		table.acquireFork(leftForkNo);
-		while (!table.tryAcquireFork(rightForkNo)) {
+		// Nimm immer die Gabel mit der kleineren Id:
+		int firstForkNo = Math.min(leftForkNo, rightForkNo);
+		int secondForkNo = Math.max(leftForkNo, rightForkNo);
+		table.acquireFork(firstForkNo);
+		while (!table.tryAcquireFork(secondForkNo)) {
 			System.out.println("Philosophers " + getId() + " retries...");
-			table.releaseFork(leftForkNo);
+			table.releaseFork(firstForkNo);
 			sleep(500);
-			table.acquireFork(leftForkNo);
+			table.acquireFork(firstForkNo);
 		}
 	}
 
