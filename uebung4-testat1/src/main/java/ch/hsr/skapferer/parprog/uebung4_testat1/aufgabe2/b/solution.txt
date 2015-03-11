@@ -1,0 +1,8 @@
+
+2.b)
+Problematik:
+Wenn jeder Philosoph immer zuerst versucht die Linke Gabel zu nehmen,
+kann immernoch der gleiche Deadlock auftreten wie bis anhin.
+
+--> Alle nehmen die Linke Gabel --> Deadlock
+--> Lösung: mindestens einer der Philosophen muss sich anders verhalten
