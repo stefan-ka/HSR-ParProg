@@ -1,0 +1,17 @@
+<assembly>
+	<fileSets>
+		<fileSet>
+			<includes>
+				<include>pom.xml</include>
+				<include>src/main/**</include>
+				<include>src/test/**</include>
+			</includes>
+			<excludes>
+				<exclude>src/assembly</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+	<formats>
+		<format>zip</format>
+	</formats>
+</assembly>
