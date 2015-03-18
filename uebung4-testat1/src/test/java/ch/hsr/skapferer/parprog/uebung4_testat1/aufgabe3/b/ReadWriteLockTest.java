@@ -4,6 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import ch.hsr.skapferer.parprog.uebung4_testat1.aufgabe3.ConcurrentTest;
+import ch.hsr.skapferer.parprog.uebung4_testat1.aufgabe3.b.naiver_ansatz.UpgradeableReadWriteLock;
+
 public class ReadWriteLockTest extends ConcurrentTest {
 	private static final int TIMEOUT = 1000;
 

@@ -5,5 +5,5 @@ Wenn mehrere Threads gleichzeitig einen readLock() machen,
 kann nachher keiner von beiden einen writeLock() machen. (--> Deadlock)
 
 Daher muss man bereits im Vorraus wissen ob der Readlock Upgradefaehig sein muss
-damit man sicherstellen kann dass nicht mehrere Threads einen solchen (upgradefaehigen) erstellen.
+damit man sicherstellen kann dass nicht mehrere Threads einen solchen (upgradefaehigen) ReadLock erstellen.
  

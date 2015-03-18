@@ -1,4 +1,4 @@
-package ch.hsr.skapferer.parprog.uebung4_testat1.aufgabe3.b;
+package ch.hsr.skapferer.parprog.uebung4_testat1.aufgabe3;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
