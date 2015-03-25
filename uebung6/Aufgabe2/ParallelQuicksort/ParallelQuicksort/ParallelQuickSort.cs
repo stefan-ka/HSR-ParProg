@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace ParallelQuickSort
 {
@@ -38,9 +39,13 @@ namespace ParallelQuickSort
                     i++; j--;
                 }
             } while (i <= j);
-            // TODO: Parallelize if (j - left > _parallelThreshold && right - i > _parallelThreshold)    
-            if (j > left) { _QuickSort(array, left, j); }
-            if (i < right) { _QuickSort(array, i, right); }
+            if (j - left > _parallelThreshold && right - i > _parallelThreshold)
+            {
+                Parallel.Invoke(
+                    () => _QuickSort(array, left, j),
+                    () => _QuickSort(array, i, right)
+                );
+            }
         }
     }
 }
