@@ -1,4 +1,3 @@
-// Parallel Programming Course, L. BlÃ¤ser
 using System;
 
 namespace ParallelQuickSort
