@@ -18,17 +18,18 @@ namespace ParallelMatrixMultiplication
             var dimM = matrixB.GetLength(1);
             var matrixC = new long[dimN, dimM];
             // Computation
-            for (int i = 0; i < dimN; i++)
+            Parallel.For(0, dimN, i =>
             {
+                int locali = i;
                 for (int j = 0; j < dimM; j++)
                 {
-                    matrixC[i, j] = 0;
+                    matrixC[locali, j] = 0;
                     for (int k = 0; k < dimK; k++)
                     {
-                        matrixC[i, j] += matrixA[i, k] * matrixB[k, j];
+                        matrixC[locali, j] += matrixA[locali, k] * matrixB[k, j];
                     }
                 }
-            }
+            });
             return matrixC;
         }
     }
