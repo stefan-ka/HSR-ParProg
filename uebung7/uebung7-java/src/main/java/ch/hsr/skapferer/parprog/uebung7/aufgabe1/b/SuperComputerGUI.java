@@ -14,13 +14,10 @@ import javax.swing.JPanel;
 
 public class SuperComputerGUI extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 4998293627753886206L;
-	private JLabel statusLabel;
 	private JLabel resultLabel;
 	private final TheSupercomputer theSupercomputer;
 
-	public SuperComputerGUI(TheSupercomputer theSupercomputer) {
-		this.theSupercomputer = theSupercomputer;
-
+	public SuperComputerGUI() {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		setLayout(layout);
 
@@ -28,15 +25,15 @@ public class SuperComputerGUI extends JPanel implements ActionListener {
 		addLabel("Confused? google the result.");
 		addStartButton();
 
-		statusLabel = addLabel("Status: ?");
 		resultLabel = addLabel("Result: ?");
 		add(Box.createRigidArea(new Dimension(0, 5)));
+
+		this.theSupercomputer = new TheSupercomputer(resultLabel);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String result = theSupercomputer.calculateUltimateAnswerToTheUltimateQuestionOfLifeTheUniverseAndEverything();
-		resultLabel.setText("Result: " + result);
+		theSupercomputer.execute();
 	}
 
 	private void addStartButton() {
@@ -61,10 +58,10 @@ public class SuperComputerGUI extends JPanel implements ActionListener {
 		}
 	}
 
-	private static void createAndShowGUI(TheSupercomputer theSupercomputer) {
+	private static void createAndShowGUI() {
 		JFrame frame = new JFrame("The Supercomputer");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		SuperComputerGUI contentPane = new SuperComputerGUI(theSupercomputer);
+		SuperComputerGUI contentPane = new SuperComputerGUI();
 		frame.setContentPane(contentPane);
 		frame.setLocationRelativeTo(null);
 		frame.pack();
@@ -72,11 +69,10 @@ public class SuperComputerGUI extends JPanel implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		final TheSupercomputer theSupercomputer = new TheSupercomputer();
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				createAndShowGUI(theSupercomputer);
+				createAndShowGUI();
 			}
 		});
 	}

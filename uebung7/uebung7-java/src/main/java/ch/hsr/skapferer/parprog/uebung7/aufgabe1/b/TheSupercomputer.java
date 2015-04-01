@@ -1,9 +1,12 @@
 package ch.hsr.skapferer.parprog.uebung7.aufgabe1.b;
 
 import java.util.Arrays;
-import java.util.Observable;
+import java.util.concurrent.ExecutionException;
 
-public class TheSupercomputer extends Observable {
+import javax.swing.JLabel;
+import javax.swing.SwingWorker;
+
+public class TheSupercomputer extends SwingWorker<String, Void> {
 
 	private enum StatusType {
 		BORED, STARTING, CONFUSED, ERROR, RECOVERING_FROM_ERROR, OVERHEATED, CALCULATING
@@ -12,6 +15,27 @@ public class TheSupercomputer extends Observable {
 	private static final int ITERATIONS = 5;
 	StatusType status = StatusType.BORED;
 	private int dotsCount = 0;
+	private JLabel resultLabel;
+
+	public TheSupercomputer(JLabel resultLabel) {
+		this.resultLabel = resultLabel;
+	}
+
+	@Override
+	protected String doInBackground() throws Exception {
+		return calculateUltimateAnswerToTheUltimateQuestionOfLifeTheUniverseAndEverything();
+	}
+
+	@Override
+	protected void done() {
+		try {
+			resultLabel.setText("Result: " + get());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public String calculateUltimateAnswerToTheUltimateQuestionOfLifeTheUniverseAndEverything() {
 		try {
@@ -19,8 +43,6 @@ public class TheSupercomputer extends Observable {
 			int secondPart = calculateSecondPart();
 			int modulo = calculateModulo();
 			status = StatusType.BORED;
-			setChanged();
-			notifyObservers();
 			return Integer.toString(firstPart * secondPart % modulo);
 
 		} catch (InterruptedException e) {
@@ -63,8 +85,6 @@ public class TheSupercomputer extends Observable {
 			Thread.sleep(200);
 			dotsCount %= ITERATIONS;
 			dotsCount++;
-			setChanged();
-			notifyObservers();
 		}
 	}
 
@@ -77,4 +97,5 @@ public class TheSupercomputer extends Observable {
 		Arrays.fill(chars, '.');
 		return new String(chars);
 	}
+
 }
