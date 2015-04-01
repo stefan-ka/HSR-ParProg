@@ -1,4 +1,4 @@
-package ch.hsr.skapferer.parprog.uebung7.aufgabe1;
+package ch.hsr.skapferer.parprog.uebung7.aufgabe1.b;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

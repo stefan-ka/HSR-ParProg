@@ -1,4 +1,4 @@
-package ch.hsr.skapferer.parprog.uebung7.aufgabe1;
+package ch.hsr.skapferer.parprog.uebung7.aufgabe1.b;
 
 import java.util.Arrays;
 import java.util.Observable;
