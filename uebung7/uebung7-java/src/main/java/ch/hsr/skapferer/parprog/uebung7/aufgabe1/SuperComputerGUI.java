@@ -55,7 +55,7 @@ public class SuperComputerGUI extends JPanel implements ActionListener {
 	}
 
 	private void addImg() {
-		java.net.URL imgURL = getClass().getResource("supercomputer.jpg");
+		java.net.URL imgURL = getClass().getClassLoader().getResource("supercomputer.jpg");
 		if (imgURL != null) {
 			add(new JLabel(new ImageIcon(imgURL)));
 		}
