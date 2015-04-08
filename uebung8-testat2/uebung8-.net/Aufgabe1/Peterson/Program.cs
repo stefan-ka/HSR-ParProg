@@ -38,6 +38,7 @@ namespace Peterson
                 throw new Exception("Wrong synchronization");
             }
             Console.WriteLine("Completed");
+            Console.ReadLine();
         }
     }
 }

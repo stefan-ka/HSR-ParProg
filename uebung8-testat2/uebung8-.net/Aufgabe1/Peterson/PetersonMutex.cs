@@ -1,17 +1,19 @@
 ﻿
+using System.Threading;
 namespace Peterson
 {
     public class PetersonMutex
     {
-        private bool state0 = false;
-        private bool state1 = false;
-        private int turn = 0;
+        private volatile bool state0 = false;
+        private volatile bool state1 = false;
+        private volatile int turn = 0;
 
         // acquire lock by thread 0
         public void Thread0Lock()
         {
             state0 = true;
             turn = 1;
+            Thread.MemoryBarrier();
             while (turn == 1 && state1) ;
         }
 
@@ -26,6 +28,7 @@ namespace Peterson
         {
             state1 = true;
             turn = 0;
+            Thread.MemoryBarrier();
             while (turn == 0 && state0) ;
         }
 
