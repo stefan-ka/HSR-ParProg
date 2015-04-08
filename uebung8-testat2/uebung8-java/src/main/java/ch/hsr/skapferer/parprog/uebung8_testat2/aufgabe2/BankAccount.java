@@ -1,22 +1,29 @@
 package ch.hsr.skapferer.parprog.uebung8_testat2.aufgabe2;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class BankAccount {
-	private int balance = 0;
+	private AtomicInteger balance = new AtomicInteger(0);
 
-	public synchronized void deposit(int amount) {
-		balance += amount;
+	public void deposit(int amount) {
+		balance.addAndGet(amount);
 	}
 
-	public synchronized boolean withdraw(int amount) {
-		if (amount <= this.balance) {
-			balance -= amount;
-			return true;
-		} else {
-			return false;
-		}
+	public boolean withdraw(int amount) {
+		int balanceOld;
+		int balanceNew;
+		do {
+			balanceOld = balance.get();
+			if (amount <= balanceOld) {
+				balanceNew = balanceOld - amount;
+			} else {
+				return false;
+			}
+		} while (!balance.compareAndSet(balanceOld, balanceNew));
+		return true;
 	}
 
-	public synchronized int getBalance() {
-		return balance;
+	public int getBalance() {
+		return balance.get();
 	}
 }
