@@ -12,7 +12,7 @@ public class PingPong {
 
 		ActorRef p1 = system.actorOf(Props.create(PingPongActor.class), "P1");
 		ActorRef p2 = system.actorOf(Props.create(PingPongActor.class), "P2");
-		
+
 		/*
 		 * indem wir p2 als Sender angeben kann p1 mit getSender darauf
 		 * zugreifen
@@ -48,12 +48,12 @@ public class PingPong {
 			} catch (InterruptedException e) {
 			}
 
-			// TODO Zähler erhöhen und dem Sender zurückschicken
+			getSender().tell(new Ping(msg.count + 1), getSelf());
 		}
 
 		private void handleStart(Start message) {
 			System.out.println("Starting...");
-			// TODO Zähler auf 0 setzen und dem Sender zurückschicken
+			getSender().tell(new Ping(0), getSelf());
 		}
 	}
 }
