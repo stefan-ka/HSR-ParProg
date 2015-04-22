@@ -8,6 +8,7 @@ import java.util.Map;
 import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
 import akka.actor.OneForOneStrategy;
+import akka.actor.Props;
 import akka.actor.SupervisorStrategy;
 import akka.actor.SupervisorStrategy.Directive;
 import akka.actor.UntypedActor;
@@ -49,21 +50,21 @@ public class WorkerManager extends UntypedActor {
 
 	public WorkerManager(int numberOfWorkers) {
 		for (int i = 0; i < numberOfWorkers; i++) {
-			// TODO Worker Actors erstellen und in der idle Queue einreihen.
+			idle.add(getContext().system().actorOf(Props.create(Worker.class)));
 		}
 	}
 
 	public void onReceive(Object message) {
 		if (message instanceof Schedule && idle.isEmpty()) {
-			// TODO Es sind leider keine Worker verfügbar, das melden wir dem
-			// Sender zurück
-
+			getSender().tell(new NoWorkersAvailable(), getSelf());
 		} else if (message instanceof Schedule) {
-			// TODO Der nächste freie Worker soll die Arbeit erledigen.
-
+			ActorRef worker = idle.pop();
+			working.put(worker, getSender());
+			worker.tell(((Schedule) message).work, getSelf());
 		} else if (message instanceof WorkItemResult) {
-			// TODO Die Arbeit wurde erledigt. Wir melden dem ursprünglichen
-			// Auftrageber das Resultat zurück
+			working.get(getSender()).tell(message, getSelf());
+			working.remove(getSender());
+			idle.push(getSender());
 		}
 	}
 
