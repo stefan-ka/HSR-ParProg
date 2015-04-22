@@ -7,6 +7,8 @@ import akka.actor.UntypedActor;
 
 public class PingPong {
 
+	private static final int MAX_PING_PONG = 10;
+
 	public static void main(String[] args) {
 		ActorSystem system = ActorSystem.create("PingPong");
 
@@ -43,12 +45,20 @@ public class PingPong {
 
 		private void handlePing(Ping msg) {
 			System.out.println(getSelf().path().name() + ": count " + msg.count);
+
+			if (msg.count == MAX_PING_PONG) {
+				getContext().system().shutdown();
+			} else {
+				sleep();
+				getSender().tell(new Ping(msg.count + 1), getSelf());
+			}
+		}
+
+		private void sleep() {
 			try {
 				Thread.sleep((long) (Math.random() * 1000) + 300);
 			} catch (InterruptedException e) {
 			}
-
-			getSender().tell(new Ping(msg.count + 1), getSelf());
 		}
 
 		private void handleStart(Start message) {
