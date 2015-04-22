@@ -50,7 +50,7 @@ public class WorkerManager extends UntypedActor {
 
 	public WorkerManager(int numberOfWorkers) {
 		for (int i = 0; i < numberOfWorkers; i++) {
-			idle.add(getContext().system().actorOf(Props.create(Worker.class)));
+			idle.add(getContext().actorOf(Props.create(Worker.class).withDispatcher("pinned-dispatcher")));
 		}
 	}
 
