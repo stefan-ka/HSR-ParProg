@@ -1,5 +1,9 @@
 package ch.hsr.skapferer.parprog.uebung9.aufgabe1;
 
+import java.util.concurrent.TimeUnit;
+
+import scala.concurrent.duration.Duration;
+import scala.concurrent.duration.FiniteDuration;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
@@ -15,11 +19,10 @@ public class PingPong {
 		ActorRef p1 = system.actorOf(Props.create(PingPongActor.class), "P1");
 		ActorRef p2 = system.actorOf(Props.create(PingPongActor.class), "P2");
 
-		/*
-		 * indem wir p2 als Sender angeben kann p1 mit getSender darauf
-		 * zugreifen
-		 */
 		p1.tell(new Start(), p2);
+
+		FiniteDuration FIVE_SECONDS = Duration.create(5, TimeUnit.SECONDS);
+		system.scheduler().schedule(FIVE_SECONDS, FIVE_SECONDS, p1, new Reset(), system.dispatcher(), ActorRef.noSender());
 	}
 
 	static class Start {
@@ -33,14 +36,26 @@ public class PingPong {
 		}
 	}
 
+	static class Reset {
+
+	}
+
 	static class PingPongActor extends UntypedActor {
+
+		private boolean doReset = false;
 
 		public void onReceive(Object message) {
 			if (message instanceof Start) {
 				handleStart((Start) message);
 			} else if (message instanceof Ping) {
 				handlePing((Ping) message);
+			} else if (message instanceof Reset) {
+				handleReset((Reset) message);
 			}
+		}
+
+		private void handleReset(Reset message) {
+			this.doReset = true;
 		}
 
 		private void handlePing(Ping msg) {
@@ -50,8 +65,16 @@ public class PingPong {
 				getContext().system().shutdown();
 			} else {
 				sleep();
-				getSender().tell(new Ping(msg.count + 1), getSelf());
+				getSender().tell(increment(msg), getSelf());
 			}
+		}
+
+		private Ping increment(Ping msg) {
+			if (doReset) {
+				doReset = false;
+				return new Ping(0);
+			}
+			return new Ping(msg.count + 1);
 		}
 
 		private void sleep() {
