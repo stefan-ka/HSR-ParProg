@@ -10,12 +10,47 @@
 #define B_ROWS A_COLS 
 #define B_COLS C_COLS 
 
+#define BLOCK_SIZE 32
+
+__global__
+void matrixMultKernel(float *A, float *B, float *C)  {
+	int row = blockIdx.x * blockDim.x + threadIdx.x;
+	int col = blockIdx.y * blockDim.y + threadIdx.y;
+	if (row < C_ROWS && col < C_COLS) {
+		float sum = 0.0f;
+		for (int k = 0; k < A_COLS; k++) {
+			sum += A[row * A_COLS + k] * B[k * B_COLS + col];
+		}
+		C[row * C_COLS + col] = sum;
+	}
+}
+
 void cudaMatrixMult(float *A, float *B, float *C, int repetitions, bool warmup) {
 	clock_t start = clock();
 
 	for (int i = 0; i < repetitions; i++)
 	{
-		// TODO: Implement parallel matrix multiplication on CUDA (simple version)
+		float *d_A, *d_B, *d_C;
+		int sizeA = A_ROWS * A_COLS * sizeof(float);
+		int sizeB = B_ROWS * B_COLS * sizeof(float);
+		int sizeC = C_ROWS * C_COLS * sizeof(float);
+
+		cudaMalloc(&d_A, sizeA);
+		cudaMalloc(&d_B, sizeB);
+		cudaMalloc(&d_C, sizeC);
+
+		cudaMemcpy(d_A, A, sizeA, cudaMemcpyHostToDevice);
+		cudaMemcpy(d_B, B, sizeB, cudaMemcpyHostToDevice);
+
+		dim3 blockDim(BLOCK_SIZE, BLOCK_SIZE);
+		dim3 gridDim((C_ROWS + BLOCK_SIZE - 1) / BLOCK_SIZE, (C_COLS + BLOCK_SIZE - 1) / BLOCK_SIZE);
+		matrixMultKernel << <gridDim, blockDim >> >(d_A, d_B, d_C);
+		handleCudaError(cudaGetLastError());
+
+		cudaMemcpy(C, d_C, sizeC, cudaMemcpyDeviceToHost);
+		cudaFree(d_A); 
+		cudaFree(d_B); 
+		cudaFree(d_C);
 	}
 	if (!warmup)
 	{
