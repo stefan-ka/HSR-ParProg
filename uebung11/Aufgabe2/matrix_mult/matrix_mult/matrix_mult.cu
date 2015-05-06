@@ -14,8 +14,8 @@
 
 __global__
 void matrixMultKernel(float *A, float *B, float *C)  {
-	int row = blockIdx.x * blockDim.x + threadIdx.x;
-	int col = blockIdx.y * blockDim.y + threadIdx.y;
+	int col = blockIdx.x * blockDim.x + threadIdx.x;
+	int row = blockIdx.y * blockDim.y + threadIdx.y;
 	if (row < C_ROWS && col < C_COLS) {
 		float sum = 0.0f;
 		for (int k = 0; k < A_COLS; k++) {
@@ -43,7 +43,7 @@ void cudaMatrixMult(float *A, float *B, float *C, int repetitions, bool warmup) 
 		cudaMemcpy(d_B, B, sizeB, cudaMemcpyHostToDevice);
 
 		dim3 blockDim(BLOCK_SIZE, BLOCK_SIZE);
-		dim3 gridDim((C_ROWS + BLOCK_SIZE - 1) / BLOCK_SIZE, (C_COLS + BLOCK_SIZE - 1) / BLOCK_SIZE);
+		dim3 gridDim((C_COLS + BLOCK_SIZE - 1) / BLOCK_SIZE, (C_ROWS + BLOCK_SIZE - 1) / BLOCK_SIZE);
 		matrixMultKernel << <gridDim, blockDim >> >(d_A, d_B, d_C);
 		handleCudaError(cudaGetLastError());
 
