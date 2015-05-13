@@ -1,0 +1,14 @@
+measurements:
+-------------------------------
+
+seq:		5143 ms
+
+2  cores:	2524 ms
+4  cores:	1266 ms
+8  cores:	 637 ms
+12 cores:	 437 ms
+16 cores:	 329 ms
+24 cores:	 399 ms / 418 ms / 227 ms
+28 cores:	 190 ms
+32 cores:	 171 ms
+36 cores:	 166 ms
