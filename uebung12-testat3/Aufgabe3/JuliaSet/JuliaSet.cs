@@ -1,4 +1,5 @@
 ﻿
+using MPI;
 using System;
 using System.Diagnostics;
 using System.Numerics;
@@ -14,19 +15,55 @@ namespace JuliaSet
 
         public static void Main(string[] args)
         {
-            // TODO: Parallelize with MPI
-            // Perform a row-wise partitioning of the image where each MPI process computes an independent partition.
-            // Processes send their computed partitions to a common process that combines the partitions to the final image.
+            using (new MPI.Environment(ref args))
+            {
+                int rank = Communicator.world.Rank;
+                int size = Communicator.world.Size;
 
-            int[,] pixels = ComputeJuliaSet();
-            BitmapHelper.WriteBitmap(pixels, OutputFile);
+                int height = ImageHeight / size;
+                int[,] pixels = ComputeJuliaSet(rank * height, height);
+
+                if (rank > 0)
+                {
+                    Communicator.world.Send(pixels, 0, 0);
+                }
+                else
+                {
+                    int[,] resultPixels = new int[ImageHeight, ImageWidth];
+                    for (int y = 0; y < pixels.GetLength(0); y++)
+                    {
+                        for (int x = 0; x < pixels.GetLength(1); x++)
+                        {
+                            resultPixels[y, x] = pixels[y, x];
+                        }
+                    }
+
+                    for (int r = 1; r < size; r++)
+                    {
+                        int[,] tmpPixels;
+                        Communicator.world.Receive(r, 0, out tmpPixels);
+                        for (int y = 0; y < tmpPixels.GetLength(0); y++)
+                        {
+                            for (int x = 0; x < tmpPixels.GetLength(1); x++)
+                            {
+                                if ((y + (r * height)) < ImageHeight)
+                                {
+                                    resultPixels[y + (r * height), x] = tmpPixels[y, x];
+                                }
+                            }
+                        }
+                    }
+
+                    BitmapHelper.WriteBitmap(resultPixels, OutputFile);
+                }
+            }
         }
 
-        private static int[,] ComputeJuliaSet()
+        private static int[,] ComputeJuliaSet(int rowStart, int height)
         {
             Stopwatch computing = Stopwatch.StartNew();
-            int[,] pixels = new int[ImageHeight, ImageWidth];
-            for (int y = 0; y < ImageHeight; y++)
+            int[,] pixels = new int[height, ImageWidth];
+            for (int y = rowStart; y < height; y++)
             {
                 for (int x = 0; x < ImageWidth; x++)
                 {
