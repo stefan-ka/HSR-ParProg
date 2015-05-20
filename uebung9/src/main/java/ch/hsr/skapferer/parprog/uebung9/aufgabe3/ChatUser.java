@@ -37,7 +37,7 @@ public class ChatUser extends UntypedActor {
 	 */
 	private void handleQuit() {
 		ActorSelection selection = getChatUsers();
-		// TODO
+		selection.tell(new Quit(), getSelf());
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class ChatUser extends UntypedActor {
 	 */
 	private void handleIncomingMessage(IncomingMessage message) {
 		ActorSelection selection = getChatUsers();
-		// TODO
+		selection.tell(message, getSelf());
 	}
 
 	private ActorSelection getChatUsers() {

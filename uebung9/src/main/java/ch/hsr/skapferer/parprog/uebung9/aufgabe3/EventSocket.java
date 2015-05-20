@@ -12,7 +12,9 @@ import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
 import akka.util.Timeout;
+import ch.hsr.skapferer.parprog.uebung9.aufgabe3.Messages.IncomingMessage;
 import ch.hsr.skapferer.parprog.uebung9.aufgabe3.Messages.Join;
+import ch.hsr.skapferer.parprog.uebung9.aufgabe3.Messages.Quit;
 
 /**
  * Der EventSocket übersetzt die eingehenden Events des Sockets in Nachrichten
@@ -41,12 +43,12 @@ public class EventSocket extends WebSocketAdapter {
 	@Override
 	public void onWebSocketText(String message) {
 		super.onWebSocketText(message);
-		// TODO Nachricht an actor senden.
+		actor.tell(new IncomingMessage(message), actor);
 	}
 
 	@Override
 	public void onWebSocketClose(int statusCode, String reason) {
 		super.onWebSocketClose(statusCode, reason);
-		// TODO Quit an actor senden.
+		actor.tell(new Quit(), actor);
 	}
 }
