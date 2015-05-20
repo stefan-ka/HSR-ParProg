@@ -19,6 +19,9 @@ namespace JuliaSet
             {
                 int rank = Communicator.world.Rank;
                 int size = Communicator.world.Size;
+                Stopwatch computing = null;
+                if (rank == 0)
+                    computing = Stopwatch.StartNew();
 
                 int height = ImageHeight / size;
                 int[,] pixels = ComputeJuliaSet(rank * height, height);
@@ -54,6 +57,7 @@ namespace JuliaSet
                         }
                     }
 
+                    Console.WriteLine("Computed {0} ms", computing.ElapsedMilliseconds);
                     BitmapHelper.WriteBitmap(resultPixels, OutputFile);
                 }
             }
@@ -61,16 +65,14 @@ namespace JuliaSet
 
         private static int[,] ComputeJuliaSet(int rowStart, int height)
         {
-            Stopwatch computing = Stopwatch.StartNew();
             int[,] pixels = new int[height, ImageWidth];
-            for (int y = rowStart; y < height; y++)
+            for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < ImageWidth; x++)
                 {
-                    pixels[y, x] = JuliaValue(x, y);
+                    pixels[y, x] = JuliaValue(x, rowStart + y);
                 }
             }
-            Console.WriteLine("Computed {0} ms", computing.ElapsedMilliseconds);
             return pixels;
         }
 
