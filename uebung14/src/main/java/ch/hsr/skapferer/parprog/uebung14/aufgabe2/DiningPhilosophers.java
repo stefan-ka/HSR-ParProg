@@ -1,21 +1,23 @@
 package ch.hsr.skapferer.parprog.uebung14.aufgabe2;
 
-import java.util.concurrent.Semaphore;
+import scala.concurrent.stm.Ref;
+import scala.concurrent.stm.japi.STM;
 
 class Fork {
-	// TODO: Replace semaphore by usage of software transactions
-	private Semaphore semaphore = new Semaphore(1);
+
+	private final Ref.View<Boolean> isTaken = STM.newRef(false);
 
 	public void acquire() {
-		try {
-			semaphore.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		STM.atomic(() -> {
+			if (isTaken.get()) {
+				STM.retry();
+			}
+			isTaken.set(true);
+		});
 	}
 
 	public void release() {
-		semaphore.release();
+		isTaken.set(false);
 	}
 }
 
