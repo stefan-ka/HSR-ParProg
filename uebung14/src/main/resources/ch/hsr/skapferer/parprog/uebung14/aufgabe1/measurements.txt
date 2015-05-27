@@ -1,0 +1,12 @@
+Before:
+-----------------------------------------------------
+Completed: last update Wed May 27 13:21:11 CEST 2015
+Bank accounts : 11
+Total time: 2194ms
+
+
+After:
+-----------------------------------------------------
+Completed: last update Wed May 27 13:44:14 CEST 2015
+Bank accounts : 11
+Total time: 12092ms

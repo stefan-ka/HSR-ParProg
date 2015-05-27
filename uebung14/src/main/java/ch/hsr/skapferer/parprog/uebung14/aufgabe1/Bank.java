@@ -1,27 +1,30 @@
 package ch.hsr.skapferer.parprog.uebung14.aufgabe1;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import scala.concurrent.stm.Ref;
+import scala.concurrent.stm.japi.STM;
+
 public class Bank {
-	// TODO: replace monitor synchronization with software transactions
 
-	private final Map<String, Account> accounts = new HashMap<>();
+	private final Map<String, Account> accounts = STM.newMap();
 
-	public synchronized Account openAccount(String name) {
+	public Account openAccount(String name) {
 		if (getAccount(name) != null) {
 			throw new RuntimeException("Account already exists");
 		}
-		Account account = new Account();
-		accounts.put(name, account);
-		return account;
+		return STM.atomic(() -> {
+			Ref.View<Account> account = STM.newRef(new Account());
+			accounts.put(name, account.get());
+			return account.get();
+		});
 	}
 
-	public synchronized int nofAccounts() {
+	public int nofAccounts() {
 		return accounts.size();
 	}
 
-	public synchronized Account getAccount(String name) {
+	public Account getAccount(String name) {
 		return accounts.get(name);
 	}
 }
